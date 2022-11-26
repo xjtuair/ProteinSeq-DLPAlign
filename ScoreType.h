@@ -324,4 +324,66 @@ inline float LOG_ADD(float x1, float x2, float x3, float x4)
 // Add five log probabilities
 /////////////////////////////////////////////////////////////////
 
-inline float LOG_ADD(float x1, float x2, float x3, float x
+inline float LOG_ADD(float x1, float x2, float x3, float x4, float x5)
+{
+    return LOG_ADD(x1, LOG_ADD(x2, LOG_ADD(x3, LOG_ADD(x4, x5))));
+}
+
+/////////////////////////////////////////////////////////////////
+// LOG_ADD()
+//
+// Add siz log probabilities
+/////////////////////////////////////////////////////////////////
+
+inline float LOG_ADD(float x1, float x2, float x3, float x4, float x5,
+                     float x6)
+{
+    return LOG_ADD(x1, LOG_ADD(x2, LOG_ADD(x3, LOG_ADD(x4, LOG_ADD(x5, x6)))));
+}
+
+/////////////////////////////////////////////////////////////////
+// LOG_ADD()
+//
+// Add seven log probabilities
+/////////////////////////////////////////////////////////////////
+
+inline float LOG_ADD(float x1, float x2, float x3, float x4, float x5, float x6,
+                     float x7)
+{
+    return LOG_ADD(x1,
+                   LOG_ADD(x2, LOG_ADD(x3, LOG_ADD(x4, LOG_ADD(x5, LOG_ADD(x6, x7))))));
+}
+
+/////////////////////////////////////////////////////////////////
+// ChooseBestOfThree()
+//
+// Store the largest of three values x1, x2, and x3 in *x.  Also
+// if xi is the largest value, then store bi in *b.
+/////////////////////////////////////////////////////////////////
+
+inline void ChooseBestOfThree(float x1, float x2, float x3, char b1, char b2,
+                              char b3, float *x, char *b)
+{
+    if (x1 >= x2)
+    {
+        if (x1 >= x3)
+        {
+            *x = x1;
+            *b = b1;
+            return;
+        }
+        *x = x3;
+        *b = b3;
+        return;
+    }
+    if (x2 >= x3)
+    {
+        *x = x2;
+        *b = b2;
+        return;
+    }
+    *x = x3;
+    *b = b3;
+}
+
+#endif
