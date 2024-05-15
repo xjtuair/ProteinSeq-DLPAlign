@@ -110,3 +110,88 @@ inline void read_matrix(score_matrix matrx)
 
     if (TRACE == 1)
         printf("\nbases read: %d\n", basecount);
+
+    for (i = 0; i < basecount; i++)
+        for (j = 0; j <= i; j++)
+        {
+
+            double value = exp(argument.beta * matrx.matrix[position++]);
+            sub_matrix[i][j] = value;
+            sub_matrix[j][i] = value;
+        }
+
+    if (TRACE)
+        for (i = 0; i < basecount; i++)
+        {
+            for (j = 0; j < basecount; j++)
+                printf(" %g ", sub_matrix[i][j]);
+            printf("\n");
+        }
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//intialize the arguments (default values)
+//////////////////////////////////////////////////////////////////////////////////
+void init_arguments()
+{
+    float gap_open = 0, gap_ext = 0;
+    int le;
+
+    le = matrixtype_to_int();
+
+    argument.N = 1;
+    strcpy(argument.input, "tempin");
+    argument.matrix = le;
+    argument.gapopen = GAPOPEN;
+    argument.gapext = GAPEXT;
+    argument.T = TEMPERATURE;
+    argument.beta = 1.0 / TEMPERATURE;
+    argument.opt = 'P';
+
+    if (le == 4)		//NUC OPTION :default is nuc_simple
+    {
+        read_matrix(nuc_simple);
+        gap_open = -4;
+        gap_ext = -0.25;
+    }
+
+    else if (le == 160)  //PROT option: default is gonnet_160
+    {
+        if (TRACE)
+            printf("read matrix\n");
+        read_matrix(gonnet_160);
+        gap_open = -22;
+        gap_ext = -1;
+    }
+    else if (le == 200)  //PROT option: default is gonnet_160
+    {
+        if (TRACE)
+            printf("read matrix\n");
+        read_matrix(vtml_200);
+        gap_open = -22.15;
+        gap_ext = -1.5;
+    }
+    else if (le == 1000)    //Error handling
+    {
+        printf("Error: enter a valid matrix type\n");
+        exit(1);
+        //additional matrices can only be lower triangular
+    }
+
+    //now override the gapopen and gapext
+    if (argument.gapopen != 0.0 || argument.gapext != 0.00)
+
+    {
+        gap_open = -argument.gapopen;
+        gap_ext = -argument.gapext;
+    }
+
+    if (TRACE)
+        printf("%f %f %f %d\n", argument.T, gap_open, gap_ext, le);
+
+    argument.gapopen = gap_open;
+    argument.gapext = gap_ext;
+    argument.opt = 'P';
+
+}
